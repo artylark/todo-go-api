@@ -1,16 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 func main() {
-	server := http.Server{
-		Addr: ":8080",
-	}
-	err := server.ListenAndServe()
-	if err != nil {
-		fmt.Println(err)
-	}
+	e := echo.New()
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "API called")
+	})
+	e.Logger.Fatal(e.Start(":8080"))
 }
