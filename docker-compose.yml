@@ -2,6 +2,9 @@ version: '3.8'
 
 services:
   db:
+    build:
+      context: .
+      dockerfile: Dockerfile
     platform: linux/x86_64
     image: mysql:8.0.28
     command: >
@@ -11,11 +14,11 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=user
       - MYSQL_PASSWORD=pass
-      - TZ="Asia/Tokyo"
     ports:
       - "3305:3306"
     volumes:
       - dbdata:/var/lib/mysql
+      - ./resources/my.cnf:/etc/mysql/conf.d/my.cnf
 
 volumes:
   dbdata:
