@@ -1,20 +1,21 @@
 package main
 
 import (
-	"fmt"
-	"github.com/artylark/todo-go-api/infrastructure"
+	"github.com/artylark/todo-go-api/infrastructure/datastore"
+	"github.com/artylark/todo-go-api/infrastructure/handler"
+	"github.com/artylark/todo-go-api/infrastructure/router"
+	"github.com/artylark/todo-go-api/interface/controller"
+	"github.com/artylark/todo-go-api/usecase/service"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 func main() {
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "API called")
-	})
-
-	db := infrastructure.Connect()
-	fmt.Println(db)
-
+	db := datastore.Connect()
+	r := datastore.NewTodoRepository(db)
+	s := service.NewTodoService(r)
+	c := controller.NewTodoController(s)
+	h := handler.NewTodoHandler(c)
+	router.Router(e, h)
 	e.Logger.Fatal(e.Start(":8080"))
 }
