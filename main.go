@@ -3,14 +3,14 @@ package main
 import (
 	"encoding/json"
 	"github.com/artylark/todo-go-api/domain/model"
-	"github.com/artylark/todo-go-api/infrastructure"
+	"github.com/artylark/todo-go-api/infrastructure/datastore"
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
 	e := echo.New()
 
-	db := infrastructure.Connect()
+	db := datastore.Connect()
 	e.GET("/todo/get", func(c echo.Context) error {
 		todos := model.Todos{}
 		db.Find(&todos)
