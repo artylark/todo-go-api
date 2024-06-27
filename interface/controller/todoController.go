@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/artylark/todo-go-api/domain/model"
-	"gorm.io/gorm"
+	"github.com/artylark/todo-go-api/usecase/service"
 )
 
 type TodoController interface {
@@ -11,24 +11,18 @@ type TodoController interface {
 }
 
 type todoController struct {
-	db *gorm.DB
+	todoService service.TodoService
 }
 
-func NewTodoController(db *gorm.DB) TodoController {
-	return &todoController{db: db}
+func NewTodoController(s service.TodoService) TodoController {
+	return &todoController{todoService: s}
 }
 
 func (c *todoController) GetAllTodos() (model.Todos, error) {
 	todos := model.Todos{}
-	err := c.db.Find(&todos).Error
-	if err != nil {
-		return nil, err
-	}
-	return todos, nil
+	return c.todoService.GetAll(todos)
 }
 
 func (c *todoController) GetTodoById(id int) (model.Todo, error) {
-	todo := model.Todo{}
-	err := c.db.Where("Id = ?", id).First(&todo).Error
-	return todo, err
+	return c.todoService.GetById(id)
 }
