@@ -1,9 +1,8 @@
 package main
 
 import (
-	"encoding/json"
-	"github.com/artylark/todo-go-api/domain/model"
 	"github.com/artylark/todo-go-api/infrastructure/datastore"
+	"github.com/artylark/todo-go-api/infrastructure/router"
 	"github.com/labstack/echo/v4"
 )
 
@@ -11,17 +10,8 @@ func main() {
 	e := echo.New()
 
 	db := datastore.Connect()
-	e.GET("/todo/get", func(c echo.Context) error {
-		todos := model.Todos{}
-		db.Find(&todos)
-		return json.NewEncoder(c.Response()).Encode(todos)
-	})
-	e.GET("/todo/get/:id", func(c echo.Context) error {
-		id := c.Param("id")
-		todo := model.Todo{}
-		db.Where("Id = ?", id).First(&todo)
-		return json.NewEncoder(c.Response()).Encode(todo)
-	})
+
+	router.Router(e, db)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
