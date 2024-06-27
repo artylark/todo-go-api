@@ -4,6 +4,7 @@ import (
 	"github.com/artylark/todo-go-api/infrastructure/datastore"
 	"github.com/artylark/todo-go-api/infrastructure/handler"
 	"github.com/artylark/todo-go-api/infrastructure/router"
+	"github.com/artylark/todo-go-api/interface/controller"
 	"github.com/labstack/echo/v4"
 )
 
@@ -12,7 +13,9 @@ func main() {
 
 	db := datastore.Connect()
 
-	h := handler.NewTodoHandler(db)
+	c := controller.NewTodoController(db)
+
+	h := handler.NewTodoHandler(c)
 
 	router.Router(e, h)
 

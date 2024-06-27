@@ -2,9 +2,9 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/artylark/todo-go-api/domain/model"
+	"github.com/artylark/todo-go-api/interface/controller"
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
+	"strconv"
 )
 
 type TodoHandler interface {
@@ -13,22 +13,29 @@ type TodoHandler interface {
 }
 
 type todoHandler struct {
-	db *gorm.DB
+	todoController controller.TodoController
 }
 
-func NewTodoHandler(db *gorm.DB) TodoHandler {
-	return &todoHandler{db: db}
+func NewTodoHandler(c controller.TodoController) TodoHandler {
+	return &todoHandler{todoController: c}
 }
 
 func (h *todoHandler) GetAllTodos(c echo.Context) error {
-	todos := model.Todos{}
-	h.db.Find(&todos)
+	todos, err := h.todoController.GetAllTodos()
+	if err != nil {
+		return err
+	}
 	return json.NewEncoder(c.Response()).Encode(todos)
 }
 
 func (h *todoHandler) GetTodoById(c echo.Context) error {
-	id := c.Param("id")
-	todo := model.Todo{}
-	h.db.Where("Id = ?", id).First(&todo)
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	todo, err := h.todoController.GetTodoById(id)
+	if err != nil {
+		return err
+	}
 	return json.NewEncoder(c.Response()).Encode(todo)
 }
