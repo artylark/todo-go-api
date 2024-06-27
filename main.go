@@ -12,7 +12,8 @@ import (
 func main() {
 	e := echo.New()
 	db := datastore.Connect()
-	s := service.NewTodoService(db)
+	r := datastore.NewTodoRepository(db)
+	s := service.NewTodoService(r)
 	c := controller.NewTodoController(s)
 	h := handler.NewTodoHandler(c)
 	router.Router(e, h)

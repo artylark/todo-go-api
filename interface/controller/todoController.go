@@ -19,8 +19,7 @@ func NewTodoController(s service.TodoService) TodoController {
 }
 
 func (c *todoController) GetAllTodos() (model.Todos, error) {
-	todos := model.Todos{}
-	return c.todoService.GetAll(todos)
+	return c.todoService.GetAll()
 }
 
 func (c *todoController) GetTodoById(id int) (model.Todo, error) {
