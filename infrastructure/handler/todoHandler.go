@@ -12,6 +12,7 @@ type TodoHandler interface {
 	CreateTodo(c echo.Context) error
 	GetAllTodos(c echo.Context) error
 	GetTodoById(c echo.Context) error
+	UpdateTodo(c echo.Context) error
 	DeleteTodo(c echo.Context) error
 }
 
@@ -49,6 +50,19 @@ func (h *todoHandler) GetTodoById(c echo.Context) error {
 		return err
 	}
 	return json.NewEncoder(c.Response()).Encode(todo)
+}
+
+func (h *todoHandler) UpdateTodo(c echo.Context) error {
+	todo := &model.Todo{}
+	if err := json.NewDecoder(c.Request().Body).Decode(&todo); err != nil {
+		return err
+	}
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	todo.Id = id
+	return h.todoController.UpdateTodo(todo)
 }
 
 func (h *todoHandler) DeleteTodo(c echo.Context) error {

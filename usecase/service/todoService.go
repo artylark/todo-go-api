@@ -9,6 +9,7 @@ type TodoService interface {
 	Create(todo *model.Todo) error
 	GetAll() (model.Todos, error)
 	GetById(id int) (model.Todo, error)
+	Update(todo *model.Todo) error
 	Delete(id int) error
 }
 
@@ -30,6 +31,10 @@ func (s *todoService) GetAll() (model.Todos, error) {
 
 func (s *todoService) GetById(id int) (model.Todo, error) {
 	return s.todoRepository.FindById(id)
+}
+
+func (s *todoService) Update(todo *model.Todo) error {
+	return s.todoRepository.Update(*todo)
 }
 
 func (s *todoService) Delete(id int) error {
