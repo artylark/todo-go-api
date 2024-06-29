@@ -6,6 +6,9 @@ import (
 )
 
 func Router(e *echo.Echo, h handler.TodoHandler) {
-	e.GET("/todo/get", h.GetAllTodos)
-	e.GET("/todo/get/:id", h.GetTodoById)
+	e.POST("/todo", h.CreateTodo)
+	e.GET("/todo", h.GetAllTodos)
+	e.GET("/todo/:id", h.GetTodoById)
+	e.PUT("/todo/:id", h.UpdateTodo)
+	e.DELETE("/todo/:id", h.DeleteTodo)
 }

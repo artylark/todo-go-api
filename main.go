@@ -7,6 +7,7 @@ import (
 	"github.com/artylark/todo-go-api/interface/controller"
 	"github.com/artylark/todo-go-api/usecase/service"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -17,5 +18,7 @@ func main() {
 	c := controller.NewTodoController(s)
 	h := handler.NewTodoHandler(c)
 	router.Router(e, h)
+	e.Pre(middleware.RemoveTrailingSlash())
+	e.Use(middleware.CORS())
 	e.Logger.Fatal(e.Start(":8080"))
 }
