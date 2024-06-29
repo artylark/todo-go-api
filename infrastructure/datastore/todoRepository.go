@@ -6,6 +6,7 @@ import (
 )
 
 type TodoRepository interface {
+	Store(todo model.Todo) error
 	FindAll() (model.Todos, error)
 	FindById(id int) (model.Todo, error)
 }
@@ -16,6 +17,10 @@ type todoRepository struct {
 
 func NewTodoRepository(db *gorm.DB) TodoRepository {
 	return &todoRepository{db: db}
+}
+
+func (r *todoRepository) Store(todo model.Todo) error {
+	return r.db.Create(&todo).Error
 }
 
 func (r *todoRepository) FindAll() (model.Todos, error) {

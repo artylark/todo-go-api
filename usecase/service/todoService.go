@@ -6,6 +6,7 @@ import (
 )
 
 type TodoService interface {
+	Create(todo *model.Todo) error
 	GetAll() (model.Todos, error)
 	GetById(id int) (model.Todo, error)
 }
@@ -16,6 +17,10 @@ type todoService struct {
 
 func NewTodoService(r repository.TodoRepository) TodoService {
 	return &todoService{todoRepository: r}
+}
+
+func (s *todoService) Create(todo *model.Todo) error {
+	return s.todoRepository.Store(*todo)
 }
 
 func (s *todoService) GetAll() (model.Todos, error) {
