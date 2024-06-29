@@ -12,6 +12,7 @@ type TodoHandler interface {
 	CreateTodo(c echo.Context) error
 	GetAllTodos(c echo.Context) error
 	GetTodoById(c echo.Context) error
+	DeleteTodo(c echo.Context) error
 }
 
 type todoHandler struct {
@@ -48,4 +49,12 @@ func (h *todoHandler) GetTodoById(c echo.Context) error {
 		return err
 	}
 	return json.NewEncoder(c.Response()).Encode(todo)
+}
+
+func (h *todoHandler) DeleteTodo(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	return h.todoController.DeleteTodo(id)
 }

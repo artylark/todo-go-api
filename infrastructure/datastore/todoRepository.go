@@ -9,6 +9,7 @@ type TodoRepository interface {
 	Store(todo model.Todo) error
 	FindAll() (model.Todos, error)
 	FindById(id int) (model.Todo, error)
+	Delete(id int) error
 }
 
 type todoRepository struct {
@@ -36,4 +37,8 @@ func (r *todoRepository) FindById(id int) (model.Todo, error) {
 	todo := model.Todo{}
 	err := r.db.Where("Id = ?", id).First(&todo).Error
 	return todo, err
+}
+
+func (r *todoRepository) Delete(id int) error {
+	return r.db.Delete(&model.Todo{}, "Id = ?", id).Error
 }
